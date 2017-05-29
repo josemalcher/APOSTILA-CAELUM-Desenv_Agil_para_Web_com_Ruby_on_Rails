@@ -28,12 +28,17 @@ Apostila do curso RR-71
 
 ---
 
-## <a name="parte1"> </a>
+## <a name="parte1">Agilidade na Web</a>
+
+[Agilidade na Web](https://www.caelum.com.br/apostila-ruby-on-rails/agilidade-na-web/)
+
 
 [Voltar ao Índice](#indice)
 
 ---
 
+## <a name="parte2"></a>
 
+[Voltar ao Índice](#indice)
 
-
+---
