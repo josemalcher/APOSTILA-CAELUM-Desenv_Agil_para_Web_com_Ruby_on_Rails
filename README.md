@@ -594,6 +594,489 @@ restautante_dois.qualifica("Comida SALGADA")
 
 ```
 
+4.14 - Coleções
+
+Arrays em Ruby são instâncias da classe Array, não sendo simplesmente uma estrutura de dados, mas possuindo diversos métodos auxiliares que nos ajudam no dia-a-dia.
+
+```ruby
+lista = Array.new
+lista << "RR-71"
+lista << "RR-75"
+lista << "FJ-91"
+
+puts lista.size
+# => 3
+```
+
+resgatar os elementos e para isso usamos [] passando um índice como parametro:
+
+```ruby
+puts lista[1]
+# => "RR-75"
+puts lista[0]
+# => "RR-71"
+```
+
+```ruby
+lista = [1, 2, "string", :simbolo, /$regex^/]
+puts lista[2]
+# => string
+```
+
+Um exemplo que demonstra uma aparição de arrays é a chamada ao método methods, que retorna uma array com os nomes de todos os métodos que o objeto sabe responder naquele instante. Esse método é definido na classe Object então todos os objetos o possuem:
+
+```ruby
+cliente = "Petrobras"
+
+puts cliente.methods
+```
+
+4.15 - Exemplo: múltiplos parâmetros
+
+```ruby
+def compra(produto1, produto2, produto3, produtoN)
+end
+
+#ou - Para receber um número qualquer de parâmetros usamos a sintaxe * do Ruby:
+
+def compra(*produtos)
+  # produtos é uma array
+  puts produtos.size
+end
+
+```
+
+```ruby
+def compra(produtos)
+  # produtos é uma array
+  puts produtos.size
+end
+compra( ["Notebook", "Pendrive", "Cafeteira"] )
+```
+
+O operador " * " é chamado de splat.
+ 
+4.16 - Hashes
+
+Ruby também tem uma estrutura indexada por qualquer objeto, onde as chaves podem ser de qualquer tipo, o que permite atingir nosso objetivo. A classe Hash é quem dá suporte a essa funcionalidade, sendo análoga aos objetos HashMap, HashTable, arrays indexados por String e dicionários de outras linguagens.
+
+```ruby
+config = Hash.new
+config["porta"] = 80
+config["ssh"] = false
+config["nome"] = "Caelum.com.br"
+
+puts config.size
+# => 3
+
+puts config["ssh"]
+# => false
+```
+
+Por serem únicos e imutáveis, símbolos são ótimos candidatos a serem chaves em Hashes, portanto poderíamos trabalhar com:
+
+```ruby
+config = Hash.new
+config[:porta] = 80
+```
+
+ existe um movimento que se tornou comum com a popularização do Rails 2, passando parâmetro através de hash:
+ 
+ ```ruby
+aluno.transfere( {destino: escola, data: Time.now, valor: 50.00} )
+
+```
+
+Note que o uso do Hash implicou em uma legibilidade maior apesar de uma proliferação de palavras:
+
+```ruby
+def transfere(argumentos)
+  destino = argumentos[:destino]
+  data = argumentos[:data]
+  valor = argumentos[:valor]
+  # executa a transferência
+end
+```
+```ruby
+class Conta
+  def transfere(valor, argumentos)
+    destino = argumentos[:para]
+    data = argumentos[:em]
+    # executa a transferência
+  end
+end
+
+aluno.transfere(50.00, {para: escola, em: Time.now})
+
+# VERSÂO ANTERIOR 1.9
+
+aluno.transfere(50.00, {:para => escola, :em => Time.now})
+```
+Além dos parênteses serem sempre opcionais, quando um Hash é o último parâmetro de um método, as chaves podem ser omitidas (Syntax Sugar).
+```ruby
+ aluno.transfere destino: escola, valor: 50.0, data: Time.now
+```
+
+Prática (franquia.rb)
+```ruby
+class Franquia
+  def initialize
+    @restaurantes = []
+  end
+  def adiciona(*restaurantes)
+    for restaurante in restaurantes
+      @restaurantes << restaurante
+    end
+  end
+  def mostra
+    for restaurante in @restaurantes
+      puts restaurante.nome
+    end
+  end
+end
+
+class Restaurante
+  attr_accessor :nome
+  def fechar_conta(dados)
+    puts "Conta dechado no valor de #{dados[:valor]} e com nota #{dados[:nota]}. Comentário : #{dados[:comentario]}"
+  end
+end
+
+restaurante_um = Restaurante.new
+restaurante_um.nome = "RESTAURANTE UM"
+
+restaurante_dois = Restaurante.new
+restaurante_dois.nome = "RES FOGO DE CHAO"
+
+franquia = Franquia.new
+franquia.adiciona restaurante_um, restaurante_dois
+# franquia.adiciona restaurante_dois
+
+franquia.mostra
+
+restaurante_um.fechar_conta valor:30, nota:9, comentario:"Otimo"
+```
+
+4.18 - Blocos e Programação Funcional
+
+```ruby
+class Banco
+  
+  def initialize(contas)
+    @contas = contas
+  end
+  
+  def status
+    saldo = 0
+    for conta in @contas
+      saldo += conta
+    end
+    saldo
+  end
+  
+end
+
+banco = Banco.new([200, 300, 400])
+banco.status
+```
+
+[4.18 - Blocos e Programação Funcional](https://www.caelum.com.br/apostila-ruby-on-rails/mais-ruby-classes-objetos-e-metodos/#4-18-blocos-e-programacao-funcional)
+
+```ruby
+class Banco
+  def initialize(contas)
+    @contas = contas
+  end
+  def status(&block)
+    saldo = 0
+    for conta in @contas
+      saldo += conta
+      block.call(saldo)
+    end
+    saldo
+  end
+end
+
+banco = Banco.new([200,300, 400])
+# puts banco.status
+
+banco.status do |saldo_parcial|
+  puts saldo_parcial
+end
+```
+Note que block é um objeto que ao ter o método call invocado, chamará o bloco que foi passado, concluindo nosso primeiro objetivo: dar a chance de quem se interessar no saldo parcial, fazer algo com ele.
+
+```ruby
+class Banco
+  def initialize(contas)
+    @contas = contas
+  end
+  def status(&block)
+    saldo = 0
+    for conta in @contas
+      saldo += conta
+      if block_given?
+        block.call(saldo)
+      end
+    end
+    saldo
+  end
+end
+
+banco = Banco.new([200,300, 400])
+# puts banco.status
+
+banco.status do |saldo_parcial|
+  puts saldo_parcial
+end
+
+# OU
+
+banco.status { |saldo_parcial| puts saldo_parcial }
+```
+
+Como vimos até aqui, o método que recebe um bloco pode decidir se deve ou não chamá-lo. Para chamar o bloco associado, existe uma outra abordagem com a palavra yield:
+
+```ruby
+class Banco
+  def initialize(contas)
+    @contas = contas
+  end
+  def status(&block)
+    saldo = 0
+    for conta in @contas
+      saldo += conta
+      if block_given?
+        yield(saldo)
+      end
+    end
+    saldo
+  end
+end
+
+banco = Banco.new([200,300, 400])
+# puts banco.status
+
+banco.status do |saldo_parcial|
+  puts saldo_parcial
+end
+
+# OU
+
+banco.status { |saldo_parcial| puts saldo_parcial }
+```
+
+Dizer que estamos passando uma função (pedaço de código) como parâmetro a outra função é o mesmo que passar blocos na chamada de métodos.
+
+Para iterar em uma Array possuímos o método each, que chama o bloco de código associado para cada um dos seus items, passando o item como parâmetro ao bloco:
+
+```ruby
+lista = ["rails", "rake", "ruby", "rvm"]
+lista.each do |programa|
+  puts programa
+end
+```
+
+```ruby
+funcionarios = ["Guilherme", "Sergio", "David"]
+nomes_maiusculos = []
+
+for nome in funcionarios
+  nomes_maiusculos << nome.upcase
+end
+
+# --->> Poderíamos usar o método each:
+
+funcionarios = ["Guilherme", "Sergio", "David"]
+nomes_maiusculos = []
+
+funcionarios.each do |nome|
+  nomes_maiusculos << nome.upcase
+end
+```
+
+```ruby
+class Franquia_refatorado_blocos
+
+  def initialize
+    @restaurantes = []
+  end
+  def adiciona(*restaurantes)
+    for restaurante in restaurantes
+      @restaurantes << restaurante
+    end
+  end
+  # def mostra
+  #   for restaurante in @restaurantes
+  #     puts restaurante.nome
+  #   end
+  # end
+  def mostra
+    @restaurantes.each do |r|
+      puts r.nome
+    end
+  end
+  def relatorio
+    @restaurantes.each do |r|
+      yield r
+    end
+  end
+
+end
+
+class Restaurante
+  attr_accessor :nome
+  def fechar_conta(dados)
+    puts "Conta dechado no valor de #{dados[:valor]} e com nota #{dados[:nota]}. Comentário : #{dados[:comentario]}"
+  end
+end
+
+restaurante_um = Restaurante.new
+restaurante_um.nome = "RESTAURANTE UM"
+
+restaurante_dois = Restaurante.new
+restaurante_dois.nome = "RES FOGO DE CHAO"
+
+franquia = Franquia_refatorado_blocos.new
+franquia.adiciona restaurante_um, restaurante_dois
+# franquia.adiciona restaurante_dois
+
+franquia.mostra
+
+restaurante_um.fechar_conta valor:30, nota:9, comentario:"Otimo"
+
+franquia.relatorio do |relat|
+  puts "Restaurante cadastrado: #{relat.nome}"
+end
+```
+
+[Entendendo Blocks, Procs e Lambdas no Ruby](https://imasters.com.br/artigo/21247/ruby/entendendo-blocks-procs-e-lambdas-no-ruby/?trace=1519021197&source=single)
+
+[Conceitos na prática: Ruby block (yield)](https://brizeno.wordpress.com/2013/10/01/conceitos-na-pratica-ruby-block-yield/)
+
+
+### 4.22 - Manipulando erros e exceptions
+
+- RuntimeError : É a exception padrão lançada pelo método raise.
+- NoMethodError : Quando um objeto recebe como parametro de uma mensagem um nome de método que não pode ser encontrado.
+- NameError : O interpretador não encontra uma variável ou método com o nome passado.
+- IOError : Causada ao ler um stream que foi fechado, tentar escrever em algo read-only e situações similares.
+- Errno::error : É a família dos erros de entrada e saída (IO).
+- TypeError : Um método recebe como argumento algo que não pode tratar.
+- ArgumentError : Causada por número incorreto de argumentos.
+
+```ruby
+print "Digite um numero"
+numero = gets.to_i
+
+begin
+  resultado = 100/numero
+rescue
+  puts "Numero digitado invalido!"
+  exit
+end
+
+puts "100/#{numero} é #{resultado}"
+
+# -----
+
+def verifica_idade(idade)
+  unless idade > 18
+    raise ArgumentError, "Voce precisa ser maior de idade..."
+  end
+end
+
+verifica_idade(17)
+
+
+# -----
+class IdadeInsuficienteException < Exception
+end
+
+def verificaIdade_dois(idade)
+  raise IdadeInsuficienteException, "Idade Insuficiente" unless > 18
+end
+
+begin
+  verificaIdade_dois(15) 
+rescue IdadeInsuficienteException => e
+  puts "Foi lançada a Exception #{e}"
+end
+```
+
+Para saber mais: Throw e catch
+
+```ruby
+def pesquisa_banco(nome)
+  if nome.size < 10
+    throw :nome_invalido, "Nome invalido, digite novamente"
+  end
+  # executa a pesquisa
+  "cliente #{nome}"
+end
+
+def executa_pesquisa(nome)
+  catch :nome_invalido do
+    cliente = pesquisa_banco(nome)
+    return cliente
+  end
+end
+
+puts executa_pesquisa("ana")
+# => "Nome invalido, digite novamente"
+
+puts executa_pesquisa("guilherme silveira")
+# => cliente guilherme silveira
+```
+
+4.24 - Arquivos com código fonte ruby
+
+Agora podemos acessar uma conta bastando primeiro importar o arquivo que a define:
+
+```ruby
+require 'conta'
+
+puts Conta.new(500).saldo
+```
+
+Uma forma de carregar o arquivo sem especificar o diretório atual é utilizando a forma abaixo:
+
+```ruby
+require File.expand_path(File.join(File.dirname(__FILE__), 'nome_do_arquivo'))
+```
+
+Assim como qualquer outra linguagem isso resulta em um possível Load Hell, onde não sabemos exatamente de onde nossos arquivos estão sendo carregados. Tome bastante cuidado para a configuração de seu ambiente.
+
+O comando require carrega o arquivo apenas uma vez. Para executar a interpretação do conteúdo do arquivo diversas vezes, utilize o método load.
+
+```ruby
+load 'conta.rb'
+load 'conta.rb'
+# executado duas vezes!
+```
+
+4.25 - Para saber mais: um pouco de IO
+
+```ruby
+print "Escreva um texto: " 
+texto = gets
+File.open( "caelum.txt", "w" ) do |f| 
+  f << texto 
+end
+```
+```ruby
+Dir.entries('caelum').each do |file_name|
+   idea = File.read( file_name )
+   puts idea
+end
+```
+Podemos lidar de maneira similar com requisições HTTP utilizando o código abaixo e imprimir o conteúdo do resultado de uma requisição:
+```ruby
+require 'net/http' 
+Net::HTTP.start( 'www.caelum.com.br', 80 ) do |http| 
+    print( http.get( '/' ).body ) 
+end
+```
 
 [Mais Ruby: classes, objetos e métodos](https://www.caelum.com.br/apostila-ruby-on-rails/mais-ruby-classes-objetos-e-metodos/)
 

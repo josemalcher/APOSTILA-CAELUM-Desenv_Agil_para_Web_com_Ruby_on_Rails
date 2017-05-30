@@ -3,7 +3,7 @@
   <component name="ModuleRunConfigurationManager">
     <shared />
     <local>
-      <configuration default="false" name="restaurante_avancado" type="RubyRunConfigurationType" factoryName="Ruby" temporary="true">
+      <configuration default="false" name="listas" type="RubyRunConfigurationType" factoryName="Ruby" temporary="true">
         <module name="workspace-APOSTILA-CAELUM-RubyOnRails" />
         <RUBY_RUN_CONFIG NAME="RUBY_ARGS" VALUE="-e $stdout.sync=true;$stderr.sync=true;load($0=ARGV.shift)" />
         <RUBY_RUN_CONFIG NAME="WORK DIR" VALUE="$MODULE_DIR$/cap04" />
@@ -14,11 +14,11 @@
         <EXTENSION ID="BundlerRunConfigurationExtension" bundleExecEnabled="false" />
         <EXTENSION ID="JRubyRunConfigurationExtension" NailgunExecEnabled="false" />
         <EXTENSION ID="RubyCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" track_test_folders="true" runner="rcov" />
-        <RUBY_RUN_CONFIG NAME="SCRIPT_PATH" VALUE="$MODULE_DIR$/cap04/restaurante_avancado.rb" />
+        <RUBY_RUN_CONFIG NAME="SCRIPT_PATH" VALUE="$MODULE_DIR$/cap04/listas.rb" />
         <RUBY_RUN_CONFIG NAME="SCRIPT_ARGS" VALUE="" />
         <method />
       </configuration>
-      <configuration default="false" name="Restaurante" type="RubyRunConfigurationType" factoryName="Ruby" temporary="true">
+      <configuration default="false" name="franquia" type="RubyRunConfigurationType" factoryName="Ruby" temporary="true">
         <module name="workspace-APOSTILA-CAELUM-RubyOnRails" />
         <RUBY_RUN_CONFIG NAME="RUBY_ARGS" VALUE="-e $stdout.sync=true;$stderr.sync=true;load($0=ARGV.shift)" />
         <RUBY_RUN_CONFIG NAME="WORK DIR" VALUE="$MODULE_DIR$/cap04" />
@@ -29,11 +29,11 @@
         <EXTENSION ID="BundlerRunConfigurationExtension" bundleExecEnabled="false" />
         <EXTENSION ID="JRubyRunConfigurationExtension" NailgunExecEnabled="false" />
         <EXTENSION ID="RubyCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" track_test_folders="true" runner="rcov" />
-        <RUBY_RUN_CONFIG NAME="SCRIPT_PATH" VALUE="$MODULE_DIR$/cap04/Restaurante.rb" />
+        <RUBY_RUN_CONFIG NAME="SCRIPT_PATH" VALUE="$MODULE_DIR$/cap04/franquia.rb" />
         <RUBY_RUN_CONFIG NAME="SCRIPT_ARGS" VALUE="" />
         <method />
       </configuration>
-      <configuration default="false" name="Pessoa" type="RubyRunConfigurationType" factoryName="Ruby" temporary="true">
+      <configuration default="false" name="Banco" type="RubyRunConfigurationType" factoryName="Ruby" temporary="true">
         <module name="workspace-APOSTILA-CAELUM-RubyOnRails" />
         <RUBY_RUN_CONFIG NAME="RUBY_ARGS" VALUE="-e $stdout.sync=true;$stderr.sync=true;load($0=ARGV.shift)" />
         <RUBY_RUN_CONFIG NAME="WORK DIR" VALUE="$MODULE_DIR$/cap04" />
@@ -44,11 +44,11 @@
         <EXTENSION ID="BundlerRunConfigurationExtension" bundleExecEnabled="false" />
         <EXTENSION ID="JRubyRunConfigurationExtension" NailgunExecEnabled="false" />
         <EXTENSION ID="RubyCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" track_test_folders="true" runner="rcov" />
-        <RUBY_RUN_CONFIG NAME="SCRIPT_PATH" VALUE="$MODULE_DIR$/cap04/Pessoa.rb" />
+        <RUBY_RUN_CONFIG NAME="SCRIPT_PATH" VALUE="$MODULE_DIR$/cap04/Banco.rb" />
         <RUBY_RUN_CONFIG NAME="SCRIPT_ARGS" VALUE="" />
         <method />
       </configuration>
-      <configuration default="false" name="Pessoa_acessor" type="RubyRunConfigurationType" factoryName="Ruby" temporary="true">
+      <configuration default="false" name="franquia_refatorado_blocos" type="RubyRunConfigurationType" factoryName="Ruby" temporary="true">
         <module name="workspace-APOSTILA-CAELUM-RubyOnRails" />
         <RUBY_RUN_CONFIG NAME="RUBY_ARGS" VALUE="-e $stdout.sync=true;$stderr.sync=true;load($0=ARGV.shift)" />
         <RUBY_RUN_CONFIG NAME="WORK DIR" VALUE="$MODULE_DIR$/cap04" />
@@ -59,11 +59,11 @@
         <EXTENSION ID="BundlerRunConfigurationExtension" bundleExecEnabled="false" />
         <EXTENSION ID="JRubyRunConfigurationExtension" NailgunExecEnabled="false" />
         <EXTENSION ID="RubyCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" track_test_folders="true" runner="rcov" />
-        <RUBY_RUN_CONFIG NAME="SCRIPT_PATH" VALUE="$MODULE_DIR$/cap04/Pessoa_acessor.rb" />
+        <RUBY_RUN_CONFIG NAME="SCRIPT_PATH" VALUE="$MODULE_DIR$/cap04/franquia_refatorado_blocos.rb" />
         <RUBY_RUN_CONFIG NAME="SCRIPT_ARGS" VALUE="" />
         <method />
       </configuration>
-      <configuration default="false" name="restaurante_inic" type="RubyRunConfigurationType" factoryName="Ruby" temporary="true">
+      <configuration default="false" name="exception_test" type="RubyRunConfigurationType" factoryName="Ruby" temporary="true">
         <module name="workspace-APOSTILA-CAELUM-RubyOnRails" />
         <RUBY_RUN_CONFIG NAME="RUBY_ARGS" VALUE="-e $stdout.sync=true;$stderr.sync=true;load($0=ARGV.shift)" />
         <RUBY_RUN_CONFIG NAME="WORK DIR" VALUE="$MODULE_DIR$/cap04" />
@@ -74,7 +74,7 @@
         <EXTENSION ID="BundlerRunConfigurationExtension" bundleExecEnabled="false" />
         <EXTENSION ID="JRubyRunConfigurationExtension" NailgunExecEnabled="false" />
         <EXTENSION ID="RubyCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" track_test_folders="true" runner="rcov" />
-        <RUBY_RUN_CONFIG NAME="SCRIPT_PATH" VALUE="$MODULE_DIR$/cap04/restaurante_inic.rb" />
+        <RUBY_RUN_CONFIG NAME="SCRIPT_PATH" VALUE="$MODULE_DIR$/cap04/exception_test.rb" />
         <RUBY_RUN_CONFIG NAME="SCRIPT_ARGS" VALUE="" />
         <method />
       </configuration>
