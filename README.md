@@ -352,7 +352,250 @@ Nesse caso, se nome é nulo, ele será preenchido com "anonimo".
 
 ---
 
-## <a name="parte4"></a>
+## <a name="parte4">Mais Ruby: classes, objetos e métodos</a>
+
+Ruby é considerada uma linguagem puramente orientada a objetos, já que tudo em Ruby é um objeto (inclusive as classes)
+
+Existe um método chamado class(), que retorna o tipo do objeto, enquanto object_id(), retorna o número da referência, ou identificador único do objeto dentro da memória heap.
+
+Aaquele que "transforma" um objeto em uma String, to_s().
+
+Para criar um objeto em Ruby:
+
+```ruby
+# criando um objeto
+objeto = Object.new()
+```
+
+4.3 - Definição de métodos
+
+def é uma palavra chave do Ruby para a definição (criação) de métodos, que podem, claro, receber parâmetros:
+
+```ruby
+def pessoa.vai(lugar)
+  puts "indo para " + lugar
+end
+```
+
+a seguir mostra um método que devolve uma String:
+
+```ruby
+def pessoa.vai(lugar)
+  "indo para " + lugar
+end
+
+puts pessoa.vai("casa")
+
+# REFATORANDO
+
+def pessoa.vai(lugar)
+  "indo para #{lugar}"
+end
+
+# Vários Argumentos
+
+def pessoa.troca(roupa, lugar)
+  "trocando de #{roupa} no #{lugar}"
+end
+
+# invocação dos métodos
+
+pessoa.troca('camiseta', 'banheiro')
+
+# Com Valores padrões
+
+def pessoa.troca(roupa, lugar='banheiro')
+  "trocando de #{roupa} no #{lugar}"
+end
+
+# invocação sem o parametro:
+pessoa.troca("camiseta")
+
+# invocação com o parametro:
+pessoa.troca("camiseta", "sala")
+```
+
+4.5 - Discussão: Enviando mensagens aos objetos
+```ruby
+pessoa.send(:fala)
+```
+
+O método send recebe como argumento o nome do método a ser invocado, que pode ser um símbolo ou uma string. De acordo com a orientação a objetos é como se estivéssemos enviando a mensagem "fala" ao objeto pessoa.
+
+4.6 - Classes
+
+```ruby
+class Pessoa
+  def fala
+    puts "Sei Falar"
+  end
+
+  def troca(roupa, lugar="banheiro")
+    "trocando de #{roupa} no #{lugar}"
+  end
+end
+
+p = Pessoa.new
+# o objeto apontado por p já nasce com os métodos fala e troca.
+```
+
+O diferencial de classes em Ruby é que são abertas. Ou seja, qualquer classe pode ser alterada a qualquer momento na aplicação. Basta "reabrir" a classe e fazer as mudanças:
+
+```ruby
+class Pessoa
+  def novo_metodo
+    # ...
+  end
+end
+```
+
+Caso a classe Pessoa já exista estamos apenas reabrindo sua definição para adicionar mais código. Não será criada uma nova classe e nem haverá um erro dizendo que a classe já existe.
+
+```ruby
+class Restaurante
+  def qualifica(nota, msg="Obrigado")
+    puts "A nota do restaurante foi #{nota}. #{msg}"
+  end
+end
+
+restaurante_um = Restaurante.new
+restaurante_dois = Restaurante.new
+
+restaurante_um.qualifica(10)
+restaurante_dois.qualifica(1, "Ruim!")
+
+```
+
+4.8 - Desafio: Classes abertas
+
+Qualquer classe em Ruby pode ser reaberta e qualquer método redefinido. Inclusive classes e métodos da biblioteca padrão, como Object e Fixnum.
+
+```ruby
+class Fixnum
+  def +(outro)
+    self - outro # fazendo a soma subtrair
+  end
+end
+```
+
+4.9 - self
+
+ É análogo ao this de outras linguagens como Java
+ 
+ Todo método em Ruby é chamado em algum objeto, ou seja, um método é sempre uma mensagem enviada a um objeto. Quando não especificado, o destino da mensagem é sempre self:
+ 
+ ```ruby
+class Conta
+  def transfere_para(destino, quantia)
+    debita quantia
+    # mesmo que self.debita(quantia)
+
+    destino.deposita quantia
+  end
+end
+```
+
+4.11 - Atributos e propriedades: acessores e modificadores
+
+Atributos, também conhecidos como variáveis de instância, em Ruby são sempre privados e começam com @. Não há como alterá-los de fora da classe; apenas os métodos de um objeto podem alterar os seus atributos (encapsulamento!).
+
+```ruby
+class Pessoa
+  def initialize
+    puts "Criando nova Pessoa"
+  end
+  def muda_nome(novo_nome)
+    @nome = novo_nome
+  end
+  def diz_nome
+    puts "meu nome é #{@nome}"
+  end
+end
+
+p = Pessoa.new
+p.muda_nome("JOSE")
+p.diz_nome
+````
+
+Os initializers são métodos privados (não podem ser chamados de fora da classe) e podem receber parâmetros. Veremos mais sobre métodos privados adiante.
+```ruby
+class Pessoa
+  def initialize(nome)
+    @nome = nome
+  end
+end
+
+joao = Pessoa.new("João")
+```
+
+Métodos acessores e modificadores são muito comuns e dão a ideia de propriedades. Existe uma convenção para a definição destes métodos, que a maioria dos desenvolvedores Ruby segue (assim como Java tem a convenção para getters e setters):
+
+```ruby
+class Pessoa
+  def nome # acessor
+    @nome
+  end
+
+  def nome=(novo_nome)
+    @nome = novo_nome
+  end
+end
+
+pessoa = Pessoa.new
+pessoa.nome=("José")
+puts pessoa.nome
+# => "José"
+```
+
+4.12 - Syntax Sugar: facilitando a sintaxe
+
+```ruby
+pessoa.nome = "José"
+```
+Apesar de parecer, a linha acima não é uma simples atribuição, já que na verdade o método nome= está sendo chamado. Este recurso é conhecido como Syntax Sugar, já que o Ruby aceita algumas exceções na sintaxe para que o código fique mais legível.
+
+Prática
+
+```ruby
+class Restaurante_inic
+
+  attr_accessor :nota
+  def initialize (nome)
+    puts "criando um novo restaurante #{nome}"
+    @nome = nome
+  end
+
+  def qualifica(msg = "Obrigado")
+    puts "A nota do restaurante #{@nome} foi Nota: #{@nota}. #{msg}"
+  end
+
+  # propriedades
+=begin
+Seria muito trabalhoso definir todas as propriedades de acesso a nossa variáveis. Refatore a classe Restaurante para utilizar o attr_accessor :nota Seu arquivo final deve ficar assim:
+  def nota=(nota)
+    @nota = nota
+  end
+  def nota
+    @nota
+  end
+=end
+  
+end
+
+restautante_um = Restaurante_inic.new("Fasanoo")
+restautante_dois = Restaurante_inic.new("FOGO DE CHAO")
+
+restautante_um.nota = 10
+restautante_dois.nota = 1
+
+restautante_um.qualifica
+restautante_dois.qualifica("Comida SALGADA")
+
+
+```
+
+
+[Mais Ruby: classes, objetos e métodos](https://www.caelum.com.br/apostila-ruby-on-rails/mais-ruby-classes-objetos-e-metodos/)
 
 [Voltar ao Índice](#indice)
 
