@@ -1182,6 +1182,219 @@ restaurante_um.relatorio
 
 A invocação na instância dará um: NoMethodError: undefined method 'relatorio' for #<Restaurante:0x100137b48 @nome="Fasano", @nota=10>
 
+5.4 - Convenções
+
+Métodos que retornam booleanos costumam terminar com ?, para que pareçam perguntas aos objetos:
+
+```ruby
+texto = "nao sou vazio"
+texto.empty? # => false
+```
+
+Métodos que tem efeito colateral (alteram o estado do objeto, ou que costumem lançar exceções) geralmente terminam com ! (bang):
+
+```ruby
+conta.cancela!
+```
+
+A comparação entre objetos é feita através do método == (sim, é um método!)
+
+```ruby
+class Pessoa
+  def ==(outra)
+    self.cpf == outra.cpf
+  end
+end
+```
+Nomes de variável e métodos em Ruby são sempre minúsculos e separados por '_' (underscore).
+
+Variáveis com nomes maiúsculo são sempre constantes.
+
+Para nomes de classes, utilize as regras de CamelCase, afinal nomes de classes são apenas constantes.
+
+### 5.5 - Polimorfismo
+
+```ruby
+class Animal
+  def come
+    "comendo"
+  end
+end
+
+class Pato < Animal
+  def quack
+    "Quack!"
+  end
+end
+
+pato = Pato.new
+pato.come # => "comendo"
+```
+
+A tipagem em Ruby não é explícita, por isso não precisamos declarar quais são os tipos dos atributos. Veja este exemplo:
+
+```ruby
+class PatoNormal
+  def faz_quack
+    "Quack!"
+  end
+end
+
+class PatoEstranho
+  def faz_quack
+    "Queck!"
+  end
+end
+
+class CriadorDePatos
+  def castiga(pato)
+    pato.faz_quack
+  end
+end
+
+pato1 = PatoNormal.new
+pato2 = PatoEstranho.new
+c = CriadorDePatos.new
+c.castiga(pato1) # => "Quack!"
+c.castiga(pato2) # => "Queck!"
+```
+
+Para o criador de patos, não interessa que objeto será passado como parâmetro. Para ele basta que o objeto saiba fazer quack. Esta característica da linguagem Ruby é conhecida como Duck Typing.
+
+5.7 - Modulos
+
+```ruby
+module Caelum
+  module Validadores
+
+    class ValidadorDeCpf
+      # ...
+    end
+
+    class ValidadorDeRg
+      # ...
+    end
+
+  end
+end
+
+validador = Caelum::Validadores::ValidadorDeCpf.new
+```
+
+Ou como mixins, conjunto de métodos a ser incluso em outras classes:
+
+```ruby
+module Comentavel
+  def comentarios
+    @comentarios ||= []
+  end
+
+  def recebe_comentario(comentario)
+    self.comentarios << comentario
+  end
+end
+
+class Revista
+  include Comentavel
+  # ...
+end
+
+revista = Revista.new
+revista.recebe_comentario("muito ruim!")
+puts revista.comentarios
+```
+
+5.8 - Metaprogramação
+
+Por ser uma linguagem dinâmica, Ruby permite adicionar outros métodos e operações aos objetos em tempo de execução.
+
+```ruby
+pessoa = Object.new()
+```
+
+```ruby
+pessoa = Object.new()
+
+def pessoa.fala()
+  puts "Sei falar"
+end
+
+pessoa.fala()
+```
+
+ Meta-programação é a capacidade de gerar/alterar código em tempo de execução. Note que isso é muito diferente de um gerador de código comum, onde geraríamos um código fixo, que deveria ser editado na mão e a aplicação só rodaria esse código posteriormente.
+ 
+ ```ruby
+class Aluno
+  # nao sabe nada
+end
+
+class Professor
+  def ensina(aluno)
+    def aluno.escreve
+      "sei escrever!"
+    end
+  end
+end
+
+juca = Aluno.new
+juca.respond_to? :escreve
+# => false
+
+professor = Professor.new
+professor.ensina juca
+juca.escreve
+# => "sei escrever!"
+```
+
+```ruby
+class Pessoa
+  attr_accessor :nome
+end
+
+p = Pessoa.new
+p.nome = "Joaquim"
+puts p.nome
+# => "Joaquim"
+```
+A chamada do método de classe attr_acessor, define os métodos nome e nome= na classe Pessoa.
+
+A técnica de código gerando código é conhecida como metaprogramação, ou metaprogramming, como já definimos.
+
+Como visto, por padrão todos os métodos são públicos. O método de classe private altera a visibilidade de todos os métodos definidos após ter sido chamado:
+
+```ruby
+class Pessoa
+  
+  private
+  
+  def vai_ao_banheiro
+    # ...
+  end
+end
+```
+
+Todos os métodos após a chamada de private são privados. Isso pode lembrar um pouco C++, que define regiões de visibilidade dentro de uma classe (seção pública, privada, ...). Um método privado em Ruby só pode ser chamado em self e o self deve ser implícito. Em outras palavras, não podemos colocar o self explicitamente para métodos privados, como em self.vai_ao_banheiro.
+
+Caso seja necessário, o método public faz com que os métodos em seguida voltem a ser públicos:
+
+```ruby
+class Pessoa
+  
+  private
+  def vai_ao_banheiro
+    # ...
+  end
+  
+  public
+  def sou_um_metodo_publico
+    # ...
+  end
+end
+```
+
+O último modificador de visibilidade é o protected. Métodos protected só podem ser chamados em self (implícito ou explícito). Por isso, o protected do Ruby acaba sendo semelhante ao protected do Java e C++, que permitem a chamada do método na própria classe e em classes filhas.
+
 
 
 [Metaprogramação](https://www.caelum.com.br/apostila-ruby-on-rails/metaprogramacao/)
