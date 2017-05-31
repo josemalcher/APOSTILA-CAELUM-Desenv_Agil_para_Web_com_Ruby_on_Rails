@@ -1084,7 +1084,107 @@ end
 
 ---
 
-## <a name="parte5"></a>
+## <a name="parte5">Metaprogramação</a>
+
+5.1 - Métodos de Classe
+
+Classes em Ruby também são objetos:
+
+```ruby
+Pessoa.class
+# => Class
+
+c = Class.new
+instancia = c.new
+```
+
+Variáveis com letra maiúscula representam constantes em Ruby, que até podem ser modificadas, mas o interpretador gera um warning. Portanto, Pessoa é apenas uma constante que aponta para um objeto do tipo Class.
+
+Se classes são objetos, podemos definir métodos de classe como em qualquer outro objeto:
+
+```ruby
+class Pessoa
+  # ...
+end
+
+def Pessoa.pessoas_no_mundo
+  100
+end
+
+Pessoa.pessoas_no_mundo
+# => 100
+```
+
+5.2 - Para saber mais: Singleton Classes
+
+A definição class << object define as chamadas singleton classes em ruby. Por exemplo, uma classe normal em ruby poderia ser:
+
+```ruby
+class Pessoa
+  def fala
+    puts 'oi'
+  end
+end
+
+p = Pessoa.new
+p.fala   # imprime 'oi'
+```
+
+Entretanto, também é possível definir métodos apenas para esse objeto "p", pois tudo em ruby, até mesmo as classes, são objetos, fazendo:
+
+```ruby
+def p.anda
+  puts 'andando'
+end
+```
+
+O método "anda" é chamado de singleton method do objeto "p".
+
+Um singleton method "vive" em uma singleton class. Todo objeto em ruby possui 2 classes:
+
+- a classe a qual foi instanciado
+- sua singleton class
+
+A singleton class é exclusiva para guardar os métodos desse objeto, sem compartilhar com outras instâncias da mesma classe.
+
+Existe uma notação especial para definir uma singleton class:
+
+```ruby
+class << Pessoa
+  def anda
+    puts 'andando'
+  end
+end
+```
+
+Definindo o código dessa forma temos o mesmo que no exemplo anterior, porém definindo o método anda explicitamente na singleton class.É possível ainda definir tudo na mesma classe:
+
+```ruby
+class Pessoa
+  class << self
+    def anda
+      puts 'andando'
+    end
+  end
+end
+
+Pessoa.anda
+```
+
+Método de Classe é diferente de static do Java
+
+Se você trabalha com java pode confundir o self com o static. Cuidado! O método definido como self roda apenas na classe, não funciona nas instâncias. Você pode testar fazendo:
+
+```ruby
+Restaurante.relatorio
+restaurante_um.relatorio
+```
+
+A invocação na instância dará um: NoMethodError: undefined method 'relatorio' for #<Restaurante:0x100137b48 @nome="Fasano", @nota=10>
+
+
+
+[Metaprogramação](https://www.caelum.com.br/apostila-ruby-on-rails/metaprogramacao/)
 
 [Voltar ao Índice](#indice)
 
